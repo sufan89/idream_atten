@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Idream_Attendance", "Idream_Attendance\Idream_Attendance.csproj", "{CC749B08-7D34-412E-9C84-B030807FFAAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Debug|x86.ActiveCfg = Debug|x86
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Debug|x86.Build.0 = Debug|x86
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Release|x86.ActiveCfg = Release|x86
+		{CC749B08-7D34-412E-9C84-B030807FFAAE}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A2B19A5-C3CC-454F-86F1-F204D45CEFAF}
+	EndGlobalSection
+EndGlobal
