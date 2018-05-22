@@ -10,11 +10,16 @@ using DevExpress.XtraEditors;
 
 namespace Idream_Attendance.Form
 {
-    public partial class AttenDateForm : DevExpress.XtraEditors.XtraForm
+    public partial class AttenDateForm : XtraForm
     {
         public AttenDateForm()
         {
             InitializeComponent();
+            InitialControl();
+        }
+        private void InitialControl()
+        {
+
         }
     }
 }
