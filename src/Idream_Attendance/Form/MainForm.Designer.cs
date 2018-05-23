@@ -71,7 +71,7 @@
             this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribEmployeeManager,
             this.ribAttenManage});
-            this.ribbon.Size = new System.Drawing.Size(1158, 143);
+            this.ribbon.Size = new System.Drawing.Size(1351, 147);
             this.ribbon.StatusBar = this.ribbonStatusBar;
             // 
             // btnEmpolyeeEntry
@@ -106,6 +106,7 @@
             this.btnSetAttenDate.Caption = "设定考勤日期";
             this.btnSetAttenDate.Id = 5;
             this.btnSetAttenDate.Name = "btnSetAttenDate";
+            this.btnSetAttenDate.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnSetAttenDate_ItemClick);
             // 
             // btnImportEmployee
             // 
@@ -178,19 +179,19 @@
             // 
             // ribbonStatusBar
             // 
-            this.ribbonStatusBar.Location = new System.Drawing.Point(0, 650);
+            this.ribbonStatusBar.Location = new System.Drawing.Point(0, 702);
             this.ribbonStatusBar.Name = "ribbonStatusBar";
             this.ribbonStatusBar.Ribbon = this.ribbon;
-            this.ribbonStatusBar.Size = new System.Drawing.Size(1158, 31);
+            this.ribbonStatusBar.Size = new System.Drawing.Size(1351, 31);
             // 
             // mainGridControl
             // 
             this.mainGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainGridControl.Location = new System.Drawing.Point(0, 143);
+            this.mainGridControl.Location = new System.Drawing.Point(0, 147);
             this.mainGridControl.MainView = this.mainGridView;
             this.mainGridControl.MenuManager = this.ribbon;
             this.mainGridControl.Name = "mainGridControl";
-            this.mainGridControl.Size = new System.Drawing.Size(1158, 507);
+            this.mainGridControl.Size = new System.Drawing.Size(1351, 555);
             this.mainGridControl.TabIndex = 2;
             this.mainGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.mainGridView});
@@ -204,9 +205,9 @@
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1158, 681);
+            this.ClientSize = new System.Drawing.Size(1351, 733);
             this.Controls.Add(this.mainGridControl);
             this.Controls.Add(this.ribbonStatusBar);
             this.Controls.Add(this.ribbon);

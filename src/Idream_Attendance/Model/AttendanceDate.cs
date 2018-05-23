@@ -15,6 +15,9 @@ namespace Idream_Attendance
 
         }
     }
+    /// <summary>
+    /// 考勤类型
+    /// </summary>
     public enum AttendanceType
     {
         NormalAtten=0,//正常考勤

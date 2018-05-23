@@ -1,4 +1,4 @@
-﻿namespace Idream_Attendance.Form
+﻿namespace Idream_Attendance
 {
     partial class AttenDateForm
     {
@@ -28,27 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.calendarControl1 = new DevExpress.XtraEditors.Controls.CalendarControl();
             this.lblYear = new DevExpress.XtraEditors.LabelControl();
             this.seYear = new DevExpress.XtraEditors.SpinEdit();
             this.lblMonth = new DevExpress.XtraEditors.LabelControl();
-            this.ddbSelectMonth = new DevExpress.XtraEditors.DropDownButton();
             this.lblAttenType = new DevExpress.XtraEditors.LabelControl();
-            this.ddbAttenType = new DevExpress.XtraEditors.DropDownButton();
             this.btnCancle = new DevExpress.XtraEditors.SimpleButton();
             this.btnOk = new DevExpress.XtraEditors.SimpleButton();
-            ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).BeginInit();
+            this.cbMonth = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cbAttenType = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.seYear.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbMonth.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAttenType.Properties)).BeginInit();
             this.SuspendLayout();
-            // 
-            // calendarControl1
-            // 
-            this.calendarControl1.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.calendarControl1.Location = new System.Drawing.Point(14, 42);
-            this.calendarControl1.Name = "calendarControl1";
-            this.calendarControl1.Size = new System.Drawing.Size(288, 237);
-            this.calendarControl1.TabIndex = 0;
             // 
             // lblYear
             // 
@@ -92,13 +83,6 @@
             this.lblMonth.TabIndex = 3;
             this.lblMonth.Text = "月    份：";
             // 
-            // ddbSelectMonth
-            // 
-            this.ddbSelectMonth.Location = new System.Drawing.Point(308, 108);
-            this.ddbSelectMonth.Name = "ddbSelectMonth";
-            this.ddbSelectMonth.Size = new System.Drawing.Size(135, 23);
-            this.ddbSelectMonth.TabIndex = 4;
-            // 
             // lblAttenType
             // 
             this.lblAttenType.Location = new System.Drawing.Point(14, 285);
@@ -107,13 +91,6 @@
             this.lblAttenType.TabIndex = 5;
             this.lblAttenType.Text = "考勤状态：";
             // 
-            // ddbAttenType
-            // 
-            this.ddbAttenType.Location = new System.Drawing.Point(14, 305);
-            this.ddbAttenType.Name = "ddbAttenType";
-            this.ddbAttenType.Size = new System.Drawing.Size(135, 23);
-            this.ddbAttenType.TabIndex = 6;
-            // 
             // btnCancle
             // 
             this.btnCancle.Location = new System.Drawing.Point(455, 362);
@@ -121,6 +98,7 @@
             this.btnCancle.Size = new System.Drawing.Size(75, 23);
             this.btnCancle.TabIndex = 7;
             this.btnCancle.Text = "取    消";
+            this.btnCancle.Click += new System.EventHandler(this.btnCancle_Click);
             // 
             // btnOk
             // 
@@ -129,21 +107,40 @@
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 8;
             this.btnOk.Text = "确    定";
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            // 
+            // cbMonth
+            // 
+            this.cbMonth.Location = new System.Drawing.Point(308, 108);
+            this.cbMonth.Name = "cbMonth";
+            this.cbMonth.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbMonth.Size = new System.Drawing.Size(100, 20);
+            this.cbMonth.TabIndex = 9;
+            // 
+            // cbAttenType
+            // 
+            this.cbAttenType.Location = new System.Drawing.Point(14, 305);
+            this.cbAttenType.Name = "cbAttenType";
+            this.cbAttenType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbAttenType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cbAttenType.Size = new System.Drawing.Size(100, 20);
+            this.cbAttenType.TabIndex = 10;
             // 
             // AttenDateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(542, 397);
+            this.Controls.Add(this.cbAttenType);
+            this.Controls.Add(this.cbMonth);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancle);
-            this.Controls.Add(this.ddbAttenType);
             this.Controls.Add(this.lblAttenType);
-            this.Controls.Add(this.ddbSelectMonth);
             this.Controls.Add(this.lblMonth);
             this.Controls.Add(this.seYear);
             this.Controls.Add(this.lblYear);
-            this.Controls.Add(this.calendarControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -151,23 +148,23 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "设置考勤日期";
-            ((System.ComponentModel.ISupportInitialize)(this.calendarControl1.CalendarTimeProperties)).EndInit();
+            this.Load += new System.EventHandler(this.AttenDateForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.seYear.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbMonth.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbAttenType.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private DevExpress.XtraEditors.Controls.CalendarControl calendarControl1;
         private DevExpress.XtraEditors.LabelControl lblYear;
         private DevExpress.XtraEditors.SpinEdit seYear;
         private DevExpress.XtraEditors.LabelControl lblMonth;
-        private DevExpress.XtraEditors.DropDownButton ddbSelectMonth;
         private DevExpress.XtraEditors.LabelControl lblAttenType;
-        private DevExpress.XtraEditors.DropDownButton ddbAttenType;
         private DevExpress.XtraEditors.SimpleButton btnCancle;
         private DevExpress.XtraEditors.SimpleButton btnOk;
+        private DevExpress.XtraEditors.ComboBoxEdit cbMonth;
+        private DevExpress.XtraEditors.ComboBoxEdit cbAttenType;
     }
 }
