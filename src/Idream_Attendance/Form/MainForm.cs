@@ -141,10 +141,14 @@ namespace Idream_Attendance
             DataTable pEmployeeDt = m_MianDbOp.GetDataTable(Common.Table_Atten);
             mainGridControl.DataSource = pEmployeeDt;
         }
-
+        /// <summary>
+        /// 生成考勤日期
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSetAttenDate_ItemClick(object sender, ItemClickEventArgs e)
         {
-            AttenDateForm SetAttenDate = new AttenDateForm();
+            AttenDateForm SetAttenDate = new AttenDateForm(m_MianDbOp);
             if (SetAttenDate.ShowDialog() != DialogResult.OK) return;
         }
     }
