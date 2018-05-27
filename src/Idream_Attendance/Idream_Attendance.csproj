@@ -107,6 +107,12 @@
     <Compile Include="Form\AttenDateForm.Designer.cs">
       <DependentUpon>AttenDateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\AttenReportFrom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AttenReportFrom.Designer.cs">
+      <DependentUpon>AttenReportFrom.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\EmployeeEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,12 +138,6 @@
       <DependentUpon>VacationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper\DBHelper.cs" />
-    <Compile Include="MainForm1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm1.Designer.cs">
-      <DependentUpon>MainForm1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Model\AttendanceDate.cs" />
     <Compile Include="Model\Employee.cs" />
     <Compile Include="Model\Vacation.cs" />
@@ -146,6 +146,9 @@
     <Compile Include="Helper\Entity.cs" />
     <EmbeddedResource Include="Form\AttenDateForm.resx">
       <DependentUpon>AttenDateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\AttenReportFrom.resx">
+      <DependentUpon>AttenReportFrom.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\EmployeeEditForm.resx">
       <DependentUpon>EmployeeEditForm.cs</DependentUpon>
@@ -158,9 +161,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\VacationForm.resx">
       <DependentUpon>VacationForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm1.resx">
-      <DependentUpon>MainForm1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">

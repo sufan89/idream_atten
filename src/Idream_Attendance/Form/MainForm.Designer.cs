@@ -97,7 +97,7 @@
             // 
             // btnExportAtten
             // 
-            this.btnExportAtten.Caption = "导出考勤报表";
+            this.btnExportAtten.Caption = "考勤报表";
             this.btnExportAtten.Id = 4;
             this.btnExportAtten.Name = "btnExportAtten";
             // 
