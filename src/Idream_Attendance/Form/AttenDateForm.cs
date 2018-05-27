@@ -105,6 +105,72 @@ namespace Idream_Attendance
             m_gvTable.Columns.Add(col);
             gridAttenDate.DataSource = m_gvTable;
         }
+        private void GetExistAttenDate(int gYear,int gMonth)
+        {
+            DateTime minDt = new DateTime(gYear, gMonth, 1);
+            DateTime maxDt = minDt.AddMonths(1);
+            maxDt = maxDt.AddDays(0 - maxDt.Day);
+            m_AttenTable = m_dbOperator.GetDataTable(Common.Table_AttenDate,
+                string.Format("{0} between #{1}# and #{2}# order by {0} asc",
+                Common.Column_AttendanceDate, minDt.ToString("yyyy-MM-dd"), maxDt.ToString("yyyy-MM-dd")));
+            if (m_AttenTable != null && m_AttenTable.Rows.Count > 0)
+            {
+                if (m_AttenTable.Columns.Contains("ID"))
+                {
+                    m_AttenTable.Columns.Remove("ID");
+                }
+                m_gvTable.Rows.Clear();
+                gridAttenDate.RefreshDataSource();
+                DataRow pNewRow = null;
+                int rowCount = m_AttenTable.Rows.Count;
+                for (int i=0;i<rowCount; i++)
+                {
+                    DataRow pRow = m_AttenTable.Rows[i];
+                    DateTime pTime = Convert.ToDateTime(pRow[Common.Column_AttendanceDate]);
+                    if (i == 0|| pTime.DayOfWeek==DayOfWeek.Monday)
+                    {
+                        pNewRow = m_gvTable.NewRow();
+                    }
+                    switch (pTime.DayOfWeek)
+                    {
+                        case DayOfWeek.Monday:
+                            pNewRow["colmonday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                        case DayOfWeek.Saturday:
+                            pNewRow["colsaturday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                        case DayOfWeek.Sunday:
+                            pNewRow["colsunday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                        case DayOfWeek.Thursday:
+                            pNewRow["colthursday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                        case DayOfWeek.Tuesday:
+                            pNewRow["coltuesday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                        case DayOfWeek.Wednesday:
+                            pNewRow["colwednesday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                        case DayOfWeek.Friday:
+                            pNewRow["colfriday"] = string.Format("{0}-{1}", pTime.ToString("dd"), GetAttenTypeStr(pRow[Common.Column_AttenType]));
+                            break;
+                    }
+                    if (pTime.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        m_gvTable.Rows.Add(pNewRow);
+                        if (i == 0)
+                        {
+                            pNewRow = m_gvTable.NewRow();
+                        }
+                    }
+                    if (i == rowCount-1 && pTime.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        m_gvTable.Rows.Add(pNewRow);
+                    }
+                }
+                gridAttenDate.RefreshDataSource();
+            }
+        }
         private void AddDateToDt(DateTime dt)
         {
             m_gvTable.Rows.Clear();
@@ -159,6 +225,18 @@ namespace Idream_Attendance
             }
             gridAttenDate.RefreshDataSource();
         }
+        private string GetAttenTypeStr(object typeValue)
+        {
+            if (typeValue == DBNull.Value) return string.Empty;
+            int AttenType = 0;
+            if (!int.TryParse(typeValue.ToString(), out AttenType)) return string.Empty;
+            AttendanceType attendanceType = (AttendanceType)AttenType;
+            foreach (string key in m_dicAttenType.Keys)
+            {
+                if (m_dicAttenType[key] == attendanceType) return key;
+            }
+            return string.Empty;
+        }
         /// <summary>
         /// 获取考勤列表并保存到数据库
         /// </summary>
@@ -182,6 +260,10 @@ namespace Idream_Attendance
                 col.ColumnName = Common.Column_AttenType;
                 col.DataType = Type.GetType("System.String");
                 m_AttenTable.Columns.Add(col);
+            }
+            else
+            {
+                m_AttenTable.Rows.Clear();
             }
             int selectYear = int.Parse(seYear.EditValue.ToString());
             int selectMonth = 0;
@@ -208,9 +290,24 @@ namespace Idream_Attendance
                     }
                 }
             }
+            //先删后加
+            DateTime minDt = new DateTime(selectYear, selectMonth, 1);
+            DateTime maxDt = minDt.AddMonths(1);
+            maxDt = maxDt.AddDays(0 - maxDt.Day);
+
+            if (!m_dbOperator.DelData(Common.Table_AttenDate,
+                string.Format("{0} between #{1}# and #{2}#",
+                Common.Column_AttendanceDate, minDt.ToString("yyyy-MM-dd"), maxDt.ToString("yyyy-MM-dd"))))
+            {
+                XtraMessageBox.Show("删除数据出错","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
             if (m_dbOperator.ImportDataTable(m_AttenTable))
             {
-                XtraMessageBox.Show("保存成功", "提示保存成功", MessageBoxButtons.OK,MessageBoxIcon.Information);
+                XtraMessageBox.Show("保存成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                XtraMessageBox.Show("保存失败","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
             }
         }
         /// <summary>
@@ -237,12 +334,15 @@ namespace Idream_Attendance
             {
                 seYear.EditValue = iYear - 1;
                 cbMonth.SelectedIndex = 11;
+                GetExistAttenDate(iYear - 1,12);
             }
             else
             {
                 seYear.EditValue = iYear;
                 cbMonth.SelectedIndex = iMonth-2;
+                GetExistAttenDate(iYear, iMonth-1);
             }
+           
         }
         /// <summary>
         /// 生成考勤日期表
@@ -279,6 +379,9 @@ namespace Idream_Attendance
         {
             if (e.CellValue == DBNull.Value)
             {
+                Click_rowIndex = -1;
+                Click_colName = string.Empty;
+                cbAttenType.SelectedIndex = -1;
                 return;
             }
             string clickValue = e.CellValue.ToString();

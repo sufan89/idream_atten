@@ -41,6 +41,21 @@ namespace Idream_Attendance
         /// <param name="strTableName"></param>
         /// <returns></returns>
         bool IsTableExist(string strTableName);
+        /// <summary>
+        /// 数据更新
+        /// </summary>
+        /// <param name="strTableName"></param>
+        /// <param name="idColumn"></param>
+        /// <param name="idValue"></param>
+        /// <param name="dicUpdateValues"></param>
+        /// <returns></returns>
         bool UpDateRows(string strTableName, string idColumn, object idValue, Dictionary<string,object> dicUpdateValues);
+        /// <summary>
+        /// 数据删除
+        /// </summary>
+        /// <param name="strTableName"></param>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
+        bool DelData(string strTableName, string strWhere = "");
     }
 }

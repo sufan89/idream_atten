@@ -33,6 +33,7 @@ namespace Idream_Attendance
                 da.Fill(ds);
                 if (ds.Tables.Count == 0) return null;
                 pDt = ds.Tables[0];
+                pDt.TableName = TableName;
             }
             catch (Exception ex)
             {
@@ -42,24 +43,22 @@ namespace Idream_Attendance
         }
         public bool ImportDataTable(DataTable importDt)
         {
+            bool flag = true;
             string strTbName = importDt.TableName;
             string strCol = string.Empty;
             string strRow = string.Empty;
             IList<string> listColumn = new List<string>();
             foreach (DataColumn co in importDt.Columns)
             {
+                if (co.ColumnName.ToLower() == "id") continue;
                 if (string.IsNullOrEmpty(strCol)) strCol = string.Format("{0}", co.ColumnName);
                 else strCol = string.Format("{0},{1}", strCol, co.ColumnName);
                 listColumn.Add(co.ColumnName);
             }
             OleDbCommand cmd = m_Connect.CreateCommand();
-            OleDbTransaction trans = null;
-            int rowCount = 0;
             try
             {
                 if (m_Connect.State != ConnectionState.Open) m_Connect.Open();
-                trans = m_Connect.BeginTransaction();
-                cmd.Transaction = trans;
                 foreach (DataRow pRow in importDt.Rows)
                 {
                     foreach (DataColumn co in importDt.Columns)
@@ -75,25 +74,15 @@ namespace Idream_Attendance
                             else strRow = string.Format("{0},{1}", strRow, pRow[co]);
                         }
                     }
-                    rowCount++;
                     cmd.CommandText = string.Format("insert into {0} ({1}) values ({2});", strTbName, strCol, strRow);
                     cmd.ExecuteNonQuery();
                     strRow = string.Empty;
-                    if (rowCount == 100)
-                    {
-                        trans.Commit();
-                        trans = m_Connect.BeginTransaction();
-                        cmd.Transaction = trans;
-                        rowCount = 0;
-                    }
                 }
-                if(rowCount!=0)
-                trans.Commit();
+
             }
             catch (Exception ex)
             {
-                if(trans!=null)
-                trans.Rollback();
+                flag = false;
             }
             finally
             {
@@ -102,7 +91,7 @@ namespace Idream_Attendance
                     m_Connect.Close();
                 }
             }
-            return true;
+            return flag;
         }
         public bool IsConnect()
         {
@@ -224,6 +213,37 @@ namespace Idream_Attendance
                 }
             }
             return true;
+        }
+        public bool DelData(string strTableName, string strWhere = "")
+        {
+            bool flag = false;
+            try
+            {
+                DataTable pDt = null;
+                OleDbCommand command = m_Connect.CreateCommand();
+                if (string.IsNullOrEmpty(strWhere))
+                {
+                    command.CommandText = string.Format("delete * from {0}", strTableName);
+                }
+                else
+                {
+                    command.CommandText = string.Format("delete * from {0} where {1}", strTableName, strWhere);
+                }
+                if (m_Connect.State != ConnectionState.Open) m_Connect.Open();
+                int rowCount=command.ExecuteNonQuery();
+                if (rowCount < 0) flag = false;
+                else flag = true;
+                m_Connect.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                if (m_Connect.State == ConnectionState.Open) m_Connect.Close();
+            }
+            return flag;
         }
     }
 }

@@ -38,5 +38,9 @@ namespace Idream_Attendance
         {
             return false;
         }
+        public bool DelData(string strTableName, string strWhere = "")
+        {
+            return false;
+        }
     }
 }
