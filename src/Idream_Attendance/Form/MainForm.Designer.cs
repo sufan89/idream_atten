@@ -120,12 +120,14 @@
             this.btnOverTime.Caption = "加班";
             this.btnOverTime.Id = 7;
             this.btnOverTime.Name = "btnOverTime";
+            this.btnOverTime.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnOverTime_ItemClick);
             // 
             // btnLeaft
             // 
             this.btnLeaft.Caption = "请假";
             this.btnLeaft.Id = 8;
             this.btnLeaft.Name = "btnLeaft";
+            this.btnLeaft.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLeaft_ItemClick);
             // 
             // ribEmployeeManager
             // 

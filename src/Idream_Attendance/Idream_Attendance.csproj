@@ -113,11 +113,23 @@
     <Compile Include="Form\EmployeeEditForm.Designer.cs">
       <DependentUpon>EmployeeEditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\FromEmOverTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FromEmOverTime.Designer.cs">
+      <DependentUpon>FromEmOverTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\VacationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\VacationForm.Designer.cs">
+      <DependentUpon>VacationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper\DBHelper.cs" />
     <Compile Include="MainForm1.cs">
@@ -128,6 +140,7 @@
     </Compile>
     <Compile Include="Model\AttendanceDate.cs" />
     <Compile Include="Model\Employee.cs" />
+    <Compile Include="Model\Vacation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helper\Entity.cs" />
@@ -137,8 +150,14 @@
     <EmbeddedResource Include="Form\EmployeeEditForm.resx">
       <DependentUpon>EmployeeEditForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form\FromEmOverTime.resx">
+      <DependentUpon>FromEmOverTime.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\VacationForm.resx">
+      <DependentUpon>VacationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm1.resx">
       <DependentUpon>MainForm1.cs</DependentUpon>

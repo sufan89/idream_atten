@@ -151,5 +151,39 @@ namespace Idream_Attendance
             AttenDateForm SetAttenDate = new AttenDateForm(m_MianDbOp);
             if (SetAttenDate.ShowDialog() != DialogResult.OK) return;
         }
+        /// <summary>
+        /// 加班
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnOverTime_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            DataRow pRow = mainGridView.GetFocusedDataRow();
+            if (pRow == null)
+            {
+                XtraMessageBox.Show("请选择需要加班的员工", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            Employee SelectEmp = new Employee(pRow, m_MianDbOp);
+            FromEmOverTime fromOverT = new FromEmOverTime(SelectEmp);
+            if (fromOverT.ShowDialog() != DialogResult.OK) return;
+        }
+        /// <summary>
+        /// 请假
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnLeaft_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            DataRow pRow = mainGridView.GetFocusedDataRow();
+            if (pRow == null)
+            {
+                XtraMessageBox.Show("请选择需要请假的员工", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            Employee SelectEmp = new Employee(pRow, m_MianDbOp);
+            VacationForm vacationForm = new VacationForm(SelectEmp);
+            vacationForm.ShowDialog();
+        }
     }
 }

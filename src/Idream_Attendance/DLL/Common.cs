@@ -62,7 +62,7 @@ namespace Idream_Attendance
         public const string Column_VacaBegin = "vacationbegin";
         public const string Column_VacaEnd = "vacationend";
         public const string Column_VacaDura = "vacationduration";
-        public const string Column_DuraType = "durationtype";
+        public const string Column_VacaType = "durationtype";
         #endregion
         #region View
         public const string View_EmployeeAtten = "v_empatten";

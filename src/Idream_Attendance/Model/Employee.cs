@@ -122,5 +122,34 @@ namespace Idream_Attendance
             };
             return m_DbOperator.UpDateRows(Common.Table_Employe, Common.Column_EmployeCode, _Code, dicUpdate);
         }
+        /// <summary>
+        /// 员工加班
+        /// </summary>
+        /// <param name="startTime">开始时间</param>
+        /// <param name="endTime">结束时间</param>
+        /// <param name="duration">时长</param>
+        /// <returns></returns>
+        public bool OverTime(DateTime startTime, DateTime endTime, double duration)
+        {
+            bool flag = false;
+            if (startTime > endTime)
+            {
+                return flag;
+            }
+            return m_DbOperator.InsertRows(Common.Table_OverTime, new List<string>()
+            { Common.Column_EmployeCode,Common.Column_OverTimeBegin,Common.Column_OverTimeEnd,Common.Column_OverTimeDura },new List<object>() {
+            Employee_Code,startTime,endTime,duration});
+        }
+        public bool Vacation(DateTime startTime, DateTime endTime, double duration, VacationType vacationType)
+        {
+            bool flag = false;
+            if (startTime > endTime)
+            {
+                return flag;
+            }
+            return m_DbOperator.InsertRows(Common.Table_Vacation, new List<string>()
+            { Common.Column_EmployeCode,Common.Column_VacaBegin,Common.Column_VacaEnd,Common.Column_VacaDura,Common.Column_VacaType }, 
+            new List<object>() {Employee_Code,startTime,endTime,duration,(int)vacationType});
+        }
     }
 }
