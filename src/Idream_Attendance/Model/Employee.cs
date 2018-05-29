@@ -234,10 +234,26 @@ namespace Idream_Attendance
             {
                 return "上午未打卡";
             }
-            else if (attendance.m_FirstAtten > dtAm && attendance.m_FirstAtten < dtPm)//打卡时间晚于9：00，则判断前一天最后打卡时间是否是20：00以后
+            else if (attendance.m_FirstAtten > dtAm && attendance.m_FirstAtten < dtNoon)//打卡时间晚于9：00，则判断前一天最后打卡时间是否是20：00以后
             {
-                DateTime dtLastDt
-                Attendance lastAtten = new Attendance(this,, m_DbOperator);
+                DateTime dtLastDt = Common.GetLastDateTime(attenDt);
+                Attendance lastAtten = new Attendance(this, dtLastDt, m_DbOperator);
+                if (lastAtten.m_LasteAtten != Common.m_NullDate)
+                {
+                    DateTime dtTemp = new DateTime(lastAtten.m_LasteAtten.Year, lastAtten.m_LasteAtten.Month, lastAtten.m_LasteAtten.Day, 20, 0, 0);
+                    if (lastAtten.m_LasteAtten >= dtTemp)
+                    {
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        return string.Format("迟{0}",);
+                    }
+                }
+                else
+                {
+
+                }
             }
             return string.Empty;
         }
