@@ -137,13 +137,12 @@
     <Compile Include="Form\VacationForm.Designer.cs">
       <DependentUpon>VacationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helper\DBHelper.cs" />
+    <Compile Include="Model\Attendance.cs" />
     <Compile Include="Model\AttendanceDate.cs" />
     <Compile Include="Model\Employee.cs" />
     <Compile Include="Model\Vacation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helper\Entity.cs" />
     <EmbeddedResource Include="Form\AttenDateForm.resx">
       <DependentUpon>AttenDateForm.cs</DependentUpon>
     </EmbeddedResource>

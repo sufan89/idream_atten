@@ -43,6 +43,10 @@ namespace Idream_Attendance
         /// 请假表
         /// </summary>
         public const string Table_Vacation= "t_vacation";
+        /// <summary>
+        /// 考勤报表
+        /// </summary>
+        public const string Table_AttenReport = "t_attenreport";
         #endregion
         #region ColumnName
         public const string Column_EmployeCode = "code";
@@ -67,8 +71,12 @@ namespace Idream_Attendance
         #region View
         public const string View_EmployeeAtten = "v_empatten";
         #endregion
-        public static DataTable T_MetaTable = null;
         /// <summary>
+        /// a jok
+        /// </summary>
+        public static DateTime m_NullDate = new DateTime(1989, 01, 06, 12, 54, 59);
+        public static DataTable T_MetaTable = null;
+        /// <summary> 
         /// 改变表列标题 
         /// </summary>
         /// <param name="dt"></param>
@@ -117,6 +125,22 @@ namespace Idream_Attendance
                 }
                 dv.Columns.Add(gc);
             }
+        }
+        /// <summary>
+        /// 获取指定日期的前一天
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetLastDateTime(DateTime date)
+        {
+            int dMonth = date.Month;
+            int dDay = date.Day;
+            //如果是元旦，则返回去年的12月31日
+            if (dMonth == 1 && dDay == 1)
+            {
+                return new DateTime(date.Year - 1, 12, 31);
+            }
+            
         }
     }
     public class DataBaseConfig
