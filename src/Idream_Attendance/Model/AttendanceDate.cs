@@ -20,9 +20,21 @@ namespace Idream_Attendance
     /// </summary>
     public enum AttendanceType
     {
-        NormalAtten=0,//正常考勤
-        NoAtten=1,//不考勤
-        NoAmAtten=2,//上午不考勤
-        NoPmAtten=3//下午不考勤
+        /// <summary>
+        /// 正常考勤
+        /// </summary>
+        NormalAtten = 0,
+        /// <summary>
+        /// 不考勤
+        /// </summary>
+        NoAtten = 1,
+        /// <summary>
+        /// 上午不考勤
+        /// </summary>
+        NoAmAtten = 2,
+        /// <summary>
+        /// 下午不考勤
+        /// </summary>
+        NoPmAtten = 3
     }
 }

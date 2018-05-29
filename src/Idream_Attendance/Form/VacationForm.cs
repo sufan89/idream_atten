@@ -79,7 +79,7 @@ namespace Idream_Attendance
             }
             double Duran =double.Parse(seVacationDura.EditValue.ToString());
             VacationType vacationType = GetTypeByValue(cbVatype.SelectedItem.ToString());
-            if (m_VaEmployee.Vacation(startTime, endTime, Duran, vacationType))
+            if (m_VaEmployee.EmployeVacation(startTime, endTime, Duran, vacationType))
             {
                 XtraMessageBox.Show("保存成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;

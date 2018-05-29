@@ -185,5 +185,25 @@ namespace Idream_Attendance
             VacationForm vacationForm = new VacationForm(SelectEmp);
             vacationForm.ShowDialog();
         }
+        /// <summary>
+        /// 生成考勤报表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnExportAtten_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            DataTable EmployeeDt = null;
+            if (mainGridView.DataSource is DataTable)
+            {
+                EmployeeDt = mainGridView.DataSource as DataTable;
+            }
+            if (EmployeeDt == null || EmployeeDt.Rows.Count == 0)
+            {
+                XtraMessageBox.Show("员工数据不存在，请先导入员工数据","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return;
+            }
+            AttenReportFrom attenReportFrom = new AttenReportFrom(EmployeeDt, m_MianDbOp);
+            attenReportFrom.ShowDialog();
+        }
     }
 }
