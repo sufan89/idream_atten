@@ -170,6 +170,9 @@ namespace Idream_Attendance
         /// <returns></returns>
         public string GetAttenDateStatu(DateTime attenDt,AttendanceType attendanceType)
         {
+            string StrOnJob = IsOnTheJob(attenDt);
+            if (StrOnJob == "已离职" || StrOnJob == "未入职") return string.Empty;
+            if (!string.IsNullOrEmpty(StrOnJob)) return StrOnJob;
             Attendance EmployeAtten = new Attendance(this, attenDt, m_DbOperator);
             switch (attendanceType)
             {
@@ -180,7 +183,7 @@ namespace Idream_Attendance
                 case AttendanceType.NoPmAtten:
                     return GetNoPmAttenString(EmployeAtten, attenDt);
                 case AttendanceType.NormalAtten:
-                    break;
+                    return GetNormalAttrn(EmployeAtten, attenDt);
             }
             return string.Empty;
         }
@@ -204,7 +207,7 @@ namespace Idream_Attendance
                     return "下午未打卡";
                 }
             }
-            if (attenDt < dt)
+            if (Attendance.m_LasteAtten < dt)
             {
                 return "早退";
             }
@@ -228,9 +231,12 @@ namespace Idream_Attendance
                 {
                     return "在休假";
                 }
-
+                else
+                {
+                    return "上午未打卡";
+                }
             }
-            else if (attendance.m_FirstAtten > dtNoon)
+            else if (attendance.m_FirstAtten > dtNoon)//第一次打卡时间在12：30之后，则是未打卡
             {
                 return "上午未打卡";
             }
@@ -241,22 +247,68 @@ namespace Idream_Attendance
                 if (lastAtten.m_LasteAtten != Common.m_NullDate)
                 {
                     DateTime dtTemp = new DateTime(lastAtten.m_LasteAtten.Year, lastAtten.m_LasteAtten.Month, lastAtten.m_LasteAtten.Day, 20, 0, 0);
-                    if (lastAtten.m_LasteAtten >= dtTemp)
+                    if (lastAtten.m_LasteAtten >= dtTemp)//前一点的最后一次打卡是20：00以后
                     {
                         return string.Empty;
                     }
-                    else
-                    {
-                        return string.Format("迟{0}",);
-                    }
                 }
-                else
+                else //前一天无最后一次打卡记录，则直接判定迟到并计算迟到的分钟数
                 {
-
+                    TimeSpan lateTs = attendance.m_LasteAtten.Subtract(dtAm);
+                    return string.Format("迟到{0}分", lateTs.Minutes); 
                 }
             }
             return string.Empty;
         }
+        /// <summary>
+        /// 正常考勤流程
+        /// </summary>
+        /// <param name="attendance"></param>
+        /// <param name="attenDt"></param>
+        /// <returns></returns>
+        private string GetNormalAttrn(Attendance attendance, DateTime attenDt)
+        {
+            //计算上午考勤状态
+            string tempAm = GetNoPmAttenString(attendance, attenDt);
+            //计算下午考勤状态
+            string tempPm = GetNoAmAttenString(attendance, attenDt);
+            if (tempAm == tempPm&&!string.IsNullOrEmpty(tempAm)) return tempAm;
+            if (string.IsNullOrEmpty(tempAm) && string.IsNullOrEmpty(tempPm)) return string.Empty;
+            if (!string.IsNullOrEmpty(tempAm) && !string.IsNullOrEmpty(tempPm))
+            {
+                if(tempAm== "上午未打卡"&& tempPm == "下午未打卡")return "矿工";
+                return string.Format("{0}+{1}", tempAm, tempPm);
+            }
+            else if (string.IsNullOrEmpty(tempAm) && !string.IsNullOrEmpty(tempPm)) return tempPm;
+            else if(!string.IsNullOrEmpty(tempAm) && string.IsNullOrEmpty(tempPm))return tempAm;
+            //if (tempAm == "上午未打卡" && tempPm == "下午未打卡") return "矿工";
+            //if (tempAm == "上午未打卡" && tempPm == "") return tempAm;
+            //if (tempAm == "" && tempPm == "下午未打卡") return tempPm;
+            //if (tempAm != "上午未打卡" && tempAm != "休假" && tempPm != "")//迟到加下午打卡异常
+            //{
+            //    return string.Format("{0}+{1}", tempAm, tempPm);
+            //}
+            //if (tempAm != "上午未打卡" && tempAm != "休假" && tempPm == "") return tempAm;
+            return string.Empty;
+        }
+        /// <summary>
+        /// 是否在职
+        /// </summary>
+        /// <param name="AttenDt"></param>
+        /// <returns></returns>
+        public string IsOnTheJob(DateTime AttenDt)
+        {
+            
+            DateTime tempDate = new DateTime(AttenDt.Year, AttenDt.Month, AttenDt.Day, 0, 0, 0);
+            DateTime tempEntryDate = new DateTime(_EntryDate.Year, _EntryDate.Month, _EntryDate.Day, 0, 0, 0);
+            DateTime tempLeaveDate = new DateTime(_LeaveDate.Year, _LeaveDate.Month, _LeaveDate.Day, 0, 0, 0);
+            if (tempDate == tempEntryDate) return string.Format("{0}入职",tempDate.ToShortDateString());
+            if (tempDate == tempLeaveDate) return string.Format("{0}离职", tempDate.ToShortDateString());
+            if (tempDate > tempLeaveDate) return "已离职";
+            if (tempDate < tempEntryDate) return "未入职";
+            return string.Empty;
+        }
         #endregion
     }
+
 }

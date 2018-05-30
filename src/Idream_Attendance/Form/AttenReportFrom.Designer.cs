@@ -72,6 +72,7 @@
             this.btnExportAtten.Size = new System.Drawing.Size(64, 21);
             this.btnExportAtten.TabIndex = 18;
             this.btnExportAtten.Text = "报表导出";
+            this.btnExportAtten.Click += new System.EventHandler(this.btnExportAtten_Click);
             // 
             // btnGetAttenDate
             // 
@@ -149,6 +150,7 @@
             // 
             this.mainView.GridControl = this.mainGridControl;
             this.mainView.Name = "mainView";
+            this.mainView.OptionsBehavior.Editable = false;
             // 
             // AttenReportFrom
             // 
@@ -162,6 +164,7 @@
             this.Name = "AttenReportFrom";
             this.ShowIcon = false;
             this.Text = "考勤报表生成";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.AttenReportFrom_Load);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).EndInit();
             this.splitContainerControl1.ResumeLayout(false);

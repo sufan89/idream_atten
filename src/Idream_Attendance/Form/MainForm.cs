@@ -138,8 +138,8 @@ namespace Idream_Attendance
             {
                 XtraMessageBox.Show("成功导入考勤数据", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            DataTable pEmployeeDt = m_MianDbOp.GetDataTable(Common.Table_Atten);
-            mainGridControl.DataSource = pEmployeeDt;
+            //DataTable pEmployeeDt = m_MianDbOp.GetDataTable(Common.Table_Atten);
+            //mainGridControl.DataSource = pEmployeeDt;
         }
         /// <summary>
         /// 生成考勤日期
@@ -193,9 +193,9 @@ namespace Idream_Attendance
         private void btnExportAtten_ItemClick(object sender, ItemClickEventArgs e)
         {
             DataTable EmployeeDt = null;
-            if (mainGridView.DataSource is DataTable)
+            if (mainGridControl.DataSource is DataTable)
             {
-                EmployeeDt = mainGridView.DataSource as DataTable;
+                EmployeeDt = mainGridControl.DataSource as DataTable;
             }
             if (EmployeeDt == null || EmployeeDt.Rows.Count == 0)
             {
