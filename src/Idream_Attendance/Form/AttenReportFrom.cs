@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraPrinting;
 
 namespace Idream_Attendance
 {
@@ -50,6 +51,10 @@ namespace Idream_Attendance
         /// 考勤报表
         /// </summary>
         private DataTable m_AttenReportDt = null;
+        /// <summary>
+        /// 考勤记录表
+        /// </summary>
+        private DataTable m_AttenDt = null;
         private void IntialControl()
         {
             foreach (string values in m_dicMothn.Values)
@@ -105,7 +110,7 @@ namespace Idream_Attendance
                  Common.Column_AttendanceDate, minDt.ToString("yyyy-MM-dd"), maxDt.ToString("yyyy-MM-dd"), Common.Column_AttendanceDate));
             if (m_AttenDateDt == null || m_AttenDateDt.Rows.Count == 0)
             {
-                XtraMessageBox.Show("考勤日期未配置，请先生成","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                XtraMessageBox.Show("考勤日期未配置，请先生成", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 AttenDateForm attenDateForm = new AttenDateForm(m_mainDbOp);
                 if (attenDateForm.ShowDialog() != DialogResult.OK)
                 {
@@ -116,9 +121,10 @@ namespace Idream_Attendance
                     m_AttenDateDt = m_mainDbOp.GetDataTable(Common.Table_AttenDate, string.Format("{0} between #{1}# and #{2}# order by {0} asc",
                         Common.Column_AttendanceDate, minDt.ToString("yyyy-MM-dd"), maxDt.ToString("yyyy-MM-dd"), Common.Column_AttendanceDate));
                     if (m_AttenDateDt == null || m_AttenDateDt.Rows.Count == 0) return flag;
-                    else { flag=true; }
+                    else { flag = true; }
                 }
             }
+            else flag = true;
             return flag;
         }
         /// <summary>
@@ -131,8 +137,10 @@ namespace Idream_Attendance
             if (m_EmployeeDt == null || m_EmployeeDt.Rows.Count == 0) return false;
             m_AttenReportDt = new DataTable(Common.Table_AttenReport);
             DataColumn col = new DataColumn(Common.Column_EmployeCode, Type.GetType("System.String"));
+            col.Caption = "工号";
             m_AttenReportDt.Columns.Add(col);
             col = new DataColumn(Common.Column_EmployeName, Type.GetType("System.String"));
+            col.Caption = "姓名";
             m_AttenReportDt.Columns.Add(col);
             for (int i = 0; i < m_AttenDateDt.Rows.Count; i++)
             {
@@ -147,6 +155,53 @@ namespace Idream_Attendance
             //先实现单个日期的计算
             return true;
         }
+        private bool GetAttenDt(DateTime minDt, DateTime maxDt)
+        {
+            bool flag = false;
+            m_AttenDt = m_mainDbOp.GetDataTable(Common.Table_Atten, string.Format("{0} between #{1}# and #{2}# order by {0} asc",
+                 Common.Column_AttenDate, minDt.ToString("yyyy-MM-dd"), maxDt.ToString("yyyy-MM-dd"), Common.Column_AttendanceDate));
+            if (m_AttenDt == null || m_AttenDt.Rows.Count == 0)
+            {
+                XtraMessageBox.Show("未导入打卡记录,请先导入", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "*.xls|*.xls|*.xlsx|*.xlsx";
+                if (openFileDialog.ShowDialog() != DialogResult.OK) return flag;
+                string selectFileName = openFileDialog.FileName;
+                DataTable pExcleDt = ExcelHelper.GetTableFromFile(selectFileName);
+                if (pExcleDt == null)
+                {
+                    XtraMessageBox.Show("读取Excel数据出错！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return flag;
+                }
+                pExcleDt.TableName = Common.Table_Atten;
+                if (m_mainDbOp.ImportDataTable(pExcleDt))
+                {
+                    XtraMessageBox.Show("成功导入考勤数据", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                m_AttenDt = m_mainDbOp.GetDataTable(Common.Table_Atten, string.Format("{0} between #{1}# and #{2}# order by {0} asc",
+                        Common.Column_AttenDate, minDt.ToString("yyyy-MM-dd"), maxDt.ToString("yyyy-MM-dd"), Common.Column_AttendanceDate));
+                    if (m_AttenDt == null || m_AttenDt.Rows.Count == 0) return flag;
+                    else { flag = true; }
+              
+            }
+            else flag = true;
+            return flag;
+        }
+        private void UpdateGridViewCol(DataTable dt)
+        {
+            mainView.Columns.Clear();
+            if (dt == null || dt.Columns.Count == 0) return;
+            foreach (DataColumn col in dt.Columns)
+            {
+                GridColumn gridCol = new GridColumn();
+                gridCol.FieldName = gridCol.Name = col.ColumnName;
+                gridCol.Caption = col.Caption;
+                //gridCol.Width = 30;
+                gridCol.OptionsColumn.FixedWidth = true;
+                mainView.Columns.Add(gridCol);
+            }
+        }
         /// <summary>
         /// 生成考勤报表
         /// </summary>
@@ -160,6 +215,9 @@ namespace Idream_Attendance
             DateTime TempDt = dtMin.AddMonths(1);
             TempDt = TempDt.AddDays(0 - TempDt.Day);
             DateTime dtMax = new DateTime(SelectYear, SelectMonth, TempDt.Day, 23, 59, 59);
+            //清除表格信息
+            mainGridControl.DataSource = null;
+            mainGridControl.RefreshDataSource();
             if (!GetAttenDateDt(dtMin, dtMax))
             {
                 XtraMessageBox.Show("考勤日期未配置正确，请重新配置!","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
@@ -170,11 +228,20 @@ namespace Idream_Attendance
                 XtraMessageBox.Show("生成报表表头失败！","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return;
             }
-            //开始计算考勤
-            foreach (DataRow pRow in m_EmployeeDt.Rows)
+            if (!GetAttenDt(dtMin, dtMax))
             {
+                XtraMessageBox.Show("没有找到指定日期的打卡记录！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            ProessForm ProessBar = new ProessForm(m_EmployeeDt.Rows.Count, 0, "考勤计算");
+            ProessBar.Show();
+            //开始计算考勤
+            for (int i=0;i< m_EmployeeDt.Rows.Count;i++)
+            {
+                DataRow pRow = m_EmployeeDt.Rows[i];
                 Employee employee = new Employee(pRow, m_mainDbOp);
                 DataRow pNewRow = m_AttenReportDt.NewRow();
+                ProessBar.SetBarAndLabel(i, string.Format("正在计算{0}的考勤信息...", employee.Employee_Name));
                 pNewRow[Common.Column_EmployeCode] = employee.Employee_Code;
                 pNewRow[Common.Column_EmployeName] = employee.Employee_Name;
                 foreach (DataRow pAttenDateRow in m_AttenDateDt.Rows)
@@ -191,7 +258,7 @@ namespace Idream_Attendance
             }
             mainGridControl.DataSource = m_AttenReportDt;
             mainGridControl.RefreshDataSource();
-
+            ProessBar.Close();
         }
         /// <summary>
         /// 表格控件数据源改变事件
@@ -200,18 +267,39 @@ namespace Idream_Attendance
         /// <param name="e"></param>
         private void mainGridControl_DataSourceChanged(object sender, EventArgs e)
         {
-            mainView.Columns.Clear();
-            if (mainGridControl.DataSource is DataTable)
+            //mainView.Columns.Clear();
+            //if (mainGridControl.DataSource is DataTable)
+            //{
+            //    DataTable dt = mainGridControl.DataSource as DataTable;
+            //    foreach (DataColumn col in dt.Columns)
+            //    {
+            //        GridColumn gridCol = new GridColumn();
+            //        gridCol.FieldName = gridCol.Name = col.ColumnName;
+            //        gridCol.Caption = col.Caption;
+            //        mainView.Columns.Add(gridCol);
+            //    }
+            //}
+        }
+        /// <summary>
+        /// 导出考勤报表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnExportAtten_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            savefile.Filter = "*.xls|*.xls";
+            if (savefile.ShowDialog() != DialogResult.OK) return;
+            string ExcelfileName = savefile.FileName;
+            try
             {
-                DataTable dt = mainGridControl.DataSource as DataTable;
-                foreach (DataColumn col in dt.Columns)
-                {
-                    GridColumn gridCol = new GridColumn();
-                    gridCol.FieldName = gridCol.Name = col.ColumnName;
-                    gridCol.Caption = col.Caption;
-                    mainView.Columns.Add(gridCol);
-                }
+                mainView.ExportToXls(ExcelfileName);
             }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show("导出失败","提示",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
+            XtraMessageBox.Show("导出成功","提示",MessageBoxButtons.OK,MessageBoxIcon.Information);
         }
     }
 }

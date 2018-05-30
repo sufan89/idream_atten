@@ -304,6 +304,7 @@ namespace Idream_Attendance
             if (m_dbOperator.ImportDataTable(m_AttenTable))
             {
                 XtraMessageBox.Show("保存成功", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
             }
             else
             {

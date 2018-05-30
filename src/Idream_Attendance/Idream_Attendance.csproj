@@ -131,6 +131,12 @@
     <Compile Include="Form\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\ProessForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ProessForm.Designer.cs">
+      <DependentUpon>ProessForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\VacationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     <EmbeddedResource Include="Form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form\ProessForm.resx">
+      <DependentUpon>ProessForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\VacationForm.resx">
       <DependentUpon>VacationForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -183,7 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DbFile\idream.mdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

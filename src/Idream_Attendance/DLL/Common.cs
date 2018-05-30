@@ -143,9 +143,7 @@ namespace Idream_Attendance
             //如果是一个月的第一天，则需要取前一个月的最后一天
             if (dDay == 1)
             {
-                DateTime tempDt = new DateTime(date.Year, dMonth - 1, dDay);
-                tempDt = tempDt.AddMonths(1);
-                tempDt = tempDt.AddDays(0 - dDay);
+                DateTime tempDt = date.AddDays(0 - dDay);
                 return tempDt;
             }
             return new DateTime(date.Year, dMonth, dDay - 1);
