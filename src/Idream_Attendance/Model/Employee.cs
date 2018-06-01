@@ -240,22 +240,41 @@ namespace Idream_Attendance
             {
                 return "上午未打卡";
             }
-            else if (attendance.m_FirstAtten > dtAm && attendance.m_FirstAtten < dtNoon)//打卡时间晚于9：00，则判断前一天最后打卡时间是否是20：00以后
+            else if (attendance.m_FirstAtten > dtAm && attendance.m_FirstAtten < dtNoon)//打卡时间晚于9：00，则判断前一天最后打卡时间是否是22：00以后
             {
                 DateTime dtLastDt = Common.GetLastDateTime(attenDt);
                 Attendance lastAtten = new Attendance(this, dtLastDt, m_DbOperator);
                 if (lastAtten.m_LasteAtten != Common.m_NullDate)
                 {
-                    DateTime dtTemp = new DateTime(lastAtten.m_LasteAtten.Year, lastAtten.m_LasteAtten.Month, lastAtten.m_LasteAtten.Day, 20, 0, 0);
-                    if (lastAtten.m_LasteAtten >= dtTemp)//前一点的最后一次打卡是20：00以后
+                    DateTime dtTemp = new DateTime(lastAtten.m_LasteAtten.Year, lastAtten.m_LasteAtten.Month, lastAtten.m_LasteAtten.Day, 22, 0, 0);
+                    if (lastAtten.m_LasteAtten >= dtTemp)//前一点的最后一次打卡是22：00以后
                     {
                         return string.Empty;
+                    }
+                    else
+                    {
+                        TimeSpan lateTs = attendance.m_FirstAtten.Subtract(dtAm);
+                        if (lateTs.Hours != 0)
+                        {
+                            return string.Format("迟到{0}分", (lateTs.Hours*60)+ lateTs.Minutes);
+                        }
+                        else
+                        {
+                            return string.Format("迟到{0}分", lateTs.Minutes);
+                        }
                     }
                 }
                 else //前一天无最后一次打卡记录，则直接判定迟到并计算迟到的分钟数
                 {
-                    TimeSpan lateTs = attendance.m_LasteAtten.Subtract(dtAm);
-                    return string.Format("迟到{0}分", lateTs.Minutes); 
+                    TimeSpan lateTs = attendance.m_FirstAtten.Subtract(dtAm);
+                    if (lateTs.Hours != 0)
+                    {
+                        return string.Format("迟到{0}分", (lateTs.Hours * 60) + lateTs.Minutes);
+                    }
+                    else
+                    {
+                        return string.Format("迟到{0}分", lateTs.Minutes);
+                    }
                 }
             }
             return string.Empty;
@@ -281,14 +300,6 @@ namespace Idream_Attendance
             }
             else if (string.IsNullOrEmpty(tempAm) && !string.IsNullOrEmpty(tempPm)) return tempPm;
             else if(!string.IsNullOrEmpty(tempAm) && string.IsNullOrEmpty(tempPm))return tempAm;
-            //if (tempAm == "上午未打卡" && tempPm == "下午未打卡") return "矿工";
-            //if (tempAm == "上午未打卡" && tempPm == "") return tempAm;
-            //if (tempAm == "" && tempPm == "下午未打卡") return tempPm;
-            //if (tempAm != "上午未打卡" && tempAm != "休假" && tempPm != "")//迟到加下午打卡异常
-            //{
-            //    return string.Format("{0}+{1}", tempAm, tempPm);
-            //}
-            //if (tempAm != "上午未打卡" && tempAm != "休假" && tempPm == "") return tempAm;
             return string.Empty;
         }
         /// <summary>
