@@ -56,6 +56,7 @@ namespace Idream_Attendance
         public const string Column_AttenDate = "attendate";
         public const string Column_Key = "key";
         public const string Column_Value = "value";
+        public const string Column_InfoType = "infotype";
         public const string Column_EntryDate = "entrydate";
         public const string Column_LeaveDate = "leavedate";
         public const string Column_AttendanceDate= "attendancedate";
@@ -70,6 +71,10 @@ namespace Idream_Attendance
         #endregion
         #region View
         public const string View_EmployeeAtten = "v_empatten";
+        #endregion
+        #region VauleType
+        public const string Value_VacationType = "vacationtype";
+        public const string Value_ColumnInfo = "columnname";
         #endregion
         /// <summary>
         /// a jok

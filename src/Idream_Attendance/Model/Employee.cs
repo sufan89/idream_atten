@@ -179,7 +179,7 @@ namespace Idream_Attendance
                 case AttendanceType.NoAmAtten:
                     return GetNoAmAttenString(EmployeAtten, attenDt);
                 case AttendanceType.NoAtten:
-                    return string.Empty;
+                    return GetOverTime(EmployeAtten, attenDt);
                 case AttendanceType.NoPmAtten:
                     return GetNoPmAttenString(EmployeAtten, attenDt);
                 case AttendanceType.NormalAtten:
@@ -195,23 +195,31 @@ namespace Idream_Attendance
         private string GetNoAmAttenString(Attendance Attendance, DateTime attenDt)
         {
             DateTime dt = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 18, 30, 0);
+            DateTime dtNoon = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 13, 30, 0);
             if (Attendance.m_LasteAtten == Common.m_NullDate)//下午没有考勤记录，则判断是否请假或者外出
             {
                 Vacation EmployeVaca = new Vacation(this,m_DbOperator);
                 if (EmployeVaca.IsVacioning(dt))
                 {
-                    return "在休假";
+                    return EmployeVaca.GetVacationTypeString();
                 }
                 else
                 {
                     return "下午未打卡";
                 }
             }
-            if (Attendance.m_LasteAtten < dt)
+            if (Attendance.m_LasteAtten < dt && Attendance.m_LasteAtten > dtNoon)
             {
                 return "早退";
             }
-            return string.Empty;
+            else if (Attendance.m_LasteAtten >= dt)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return "下午未打卡";
+            }
         }
         /// <summary>
         /// 获取下午不考勤信息，只计算上午考勤状态
@@ -229,7 +237,7 @@ namespace Idream_Attendance
                 Vacation EmployeVaca = new Vacation(this, m_DbOperator);
                 if (EmployeVaca.IsVacioning(dtAm))
                 {
-                    return "在休假";
+                    return EmployeVaca.GetVacationTypeString();
                 }
                 else
                 {
@@ -307,7 +315,7 @@ namespace Idream_Attendance
         /// </summary>
         /// <param name="AttenDt"></param>
         /// <returns></returns>
-        public string IsOnTheJob(DateTime AttenDt)
+        private string IsOnTheJob(DateTime AttenDt)
         {
             
             DateTime tempDate = new DateTime(AttenDt.Year, AttenDt.Month, AttenDt.Day, 0, 0, 0);
@@ -319,6 +327,51 @@ namespace Idream_Attendance
             if (tempDate < tempEntryDate) return "未入职";
             return string.Empty;
         }
+        /// <summary>
+        /// 是否加班,主要用于非工作日
+        /// </summary>
+        /// <param name="attenDt">考勤日期</param>
+        /// <param name="attendance">考勤对象</param>
+        /// <returns>这里只返回计算的加班时长，有异常的情况均不处理。即如果出现未打卡的情况，则返回空串</returns>
+        private string GetOverTime(Attendance attendance, DateTime attenDt)
+        {
+            OverTime ovt = new OverTime(this, m_DbOperator);
+            if (ovt.IsOverTime(attenDt))//有加班申请，则计算加班时长
+            {
+                //没有打卡时间
+                if (attendance.m_FirstAtten == Common.m_NullDate || attendance.m_LasteAtten == Common.m_NullDate) return string.Empty;
+                DateTime AmDt = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 9, 0, 0);
+                DateTime NoonDt = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 12, 0, 0);
+                DateTime AfNoonDt= new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 13, 30, 0);
+                int OtDuran = 0;
+                //计算上午加班时间
+                if (attendance.m_FirstAtten <= NoonDt)
+                {
+                    TimeSpan ts = NoonDt.Subtract(attendance.m_FirstAtten);
+                    OtDuran += ts.Hours;
+                }
+                //计算下午加班时间
+                if (attendance.m_FirstAtten >= AfNoonDt)
+                {
+                    TimeSpan ts = attendance.m_LasteAtten.Subtract(AfNoonDt);
+                    OtDuran += ts.Hours;
+                }
+                if (OtDuran != 0)
+                {
+                    return string.Format("加班{0}H", OtDuran);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         #endregion
     }
 

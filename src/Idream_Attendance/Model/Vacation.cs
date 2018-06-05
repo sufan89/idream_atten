@@ -38,7 +38,7 @@ namespace Idream_Attendance
         }
         private double _VacationDura = 0.0;
         /// <summary>
-        /// 休假时长
+        /// 休假时长,单位为：H
         /// </summary>
         public double m_VacationDura
         {
@@ -70,6 +70,18 @@ namespace Idream_Attendance
                 _EmployeeVacationType = (VacationType)tempInt;
             }
             return flag;
+        }
+        /// <summary>
+        /// 获取假期类型
+        /// </summary>
+        /// <returns></returns>
+        public string GetVacationTypeString()
+        {
+            DataRow[] pRows = Common.T_MetaTable.Select(string.Format("{0}=='{1}' and {2}='{3}'",
+                Common.Column_InfoType, Common.Value_VacationType,
+                Common.Column_Key,(int)_EmployeeVacationType));
+            if (pRows.Length == 0) return string.Empty;
+            return pRows[0][Common.Column_Value].ToString();
         }
     }
     /// <summary>

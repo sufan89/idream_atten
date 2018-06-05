@@ -146,6 +146,7 @@
     <Compile Include="Model\Attendance.cs" />
     <Compile Include="Model\AttendanceDate.cs" />
     <Compile Include="Model\Employee.cs" />
+    <Compile Include="Model\OverTime.cs" />
     <Compile Include="Model\Vacation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
