@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 /*
  * 考勤类，主要技术员工考勤信息
+ * 主要记录分析员工第一次打卡时间与最后一次打卡时间
  */
 namespace Idream_Attendance
 {
