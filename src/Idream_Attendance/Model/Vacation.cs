@@ -57,8 +57,8 @@ namespace Idream_Attendance
         public bool IsVacioning(DateTime Dt)
         {
             bool flag = false;
-            DataTable VacationDt = m_DbOperator.GetDataTable(Common.Table_Vacation, string.Format("{0}<#{1}# and {2}>#{1}# and {3}='{4}'",
-                Common.Column_VacaBegin, Dt, Common.Column_VacaEnd, Dt,Common.Column_EmployeCode,m_Employee.Employee_Code));
+            DataTable VacationDt = m_DbOperator.GetDataTable(Common.Table_Vacation, string.Format("{0}<=#{1}# and {2}>=#{1}# and {3}='{4}'",
+                Common.Column_VacaBegin, Dt, Common.Column_VacaEnd,Common.Column_EmployeCode,m_Employee.Employee_Code));
             if (VacationDt == null || VacationDt.Rows.Count == 0) return false;
             else flag = true;
             _VacationStart = Convert.ToDateTime(VacationDt.Rows[0][Common.Column_VacaBegin]);
@@ -77,7 +77,7 @@ namespace Idream_Attendance
         /// <returns></returns>
         public string GetVacationTypeString()
         {
-            DataRow[] pRows = Common.T_MetaTable.Select(string.Format("{0}=='{1}' and {2}='{3}'",
+            DataRow[] pRows = Common.T_MetaTable.Select(string.Format("{0}='{1}' and {2}='{3}'",
                 Common.Column_InfoType, Common.Value_VacationType,
                 Common.Column_Key,(int)_EmployeeVacationType));
             if (pRows.Length == 0) return string.Empty;
