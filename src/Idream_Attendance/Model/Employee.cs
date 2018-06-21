@@ -231,7 +231,7 @@ namespace Idream_Attendance
         {
             DateTime dtAm = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 9, 0, 0);
             DateTime dtPm = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 18, 30, 0);
-            DateTime dtNoon = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 13, 30, 0);
+            DateTime dtNoon = new DateTime(attenDt.Year, attenDt.Month, attenDt.Day, 12, 00, 0);
             if (attendance.m_FirstAtten == Common.m_NullDate)//上午没有考勤记录，则判断是否请假或者外出
             {
                 Vacation EmployeVaca = new Vacation(this, m_DbOperator);
@@ -244,7 +244,7 @@ namespace Idream_Attendance
                     return "上午未打卡";
                 }
             }
-            else if (attendance.m_FirstAtten > dtNoon)//第一次打卡时间在12：30之后，则是未打卡
+            else if (attendance.m_FirstAtten > dtNoon)//第一次打卡时间在12：00之后，则是未打卡
             {
                 return "上午未打卡";
             }
@@ -304,6 +304,10 @@ namespace Idream_Attendance
             if (!string.IsNullOrEmpty(tempAm) && !string.IsNullOrEmpty(tempPm))
             {
                 if(tempAm== "上午未打卡"&& tempPm == "下午未打卡")return "矿工";
+                if (tempAm == tempPm)
+                {
+                    return string.Format("{0}H", tempAm);
+                }
                 return string.Format("{0}+{1}", tempAm, tempPm);
             }
             else if (string.IsNullOrEmpty(tempAm) && !string.IsNullOrEmpty(tempPm)) return tempPm;
@@ -358,7 +362,15 @@ namespace Idream_Attendance
                 }
                 if (OtDuran != 0)
                 {
-                    return string.Format("加班{0}H", OtDuran);
+                    if (OtDuran >= 8)
+                    {
+                        return string.Format("加班8H");
+                    }
+                    else
+                    {
+                        return string.Format("加班{0}H", OtDuran);
+                    }
+                    
                 }
                 else
                 {
@@ -371,7 +383,6 @@ namespace Idream_Attendance
                 return string.Empty;
             }
         }
-
         #endregion
     }
 
